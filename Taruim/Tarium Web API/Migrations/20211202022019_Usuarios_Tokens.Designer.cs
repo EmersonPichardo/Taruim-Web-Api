@@ -2,15 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Tarium_Web_API.Contexts.TariumMainDB;
 
 namespace Tarium_Web_API.Migrations
 {
     [DbContext(typeof(TariumMainDB_Context))]
-    partial class TariumMainDB_ContextModelSnapshot : ModelSnapshot
+    [Migration("20211202022019_Usuarios_Tokens")]
+    partial class Usuarios_Tokens
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -80,9 +82,6 @@ namespace Tarium_Web_API.Migrations
                     b.Property<string>("Nombre")
                         .IsRequired()
                         .HasColumnType("nvarchar(100)");
-
-                    b.Property<int>("Rol")
-                        .HasColumnType("int");
 
                     b.HasKey("Id")
                         .HasName("PK_Usuarios");
