@@ -11,6 +11,7 @@ namespace Tarium_Web_API.Contexts.TariumMainDB
         public DbSet<Proveedor> Proveedores { get; set; }
         public DbSet<Producto> Productos { get; set; }
         public DbSet<Catalogo> Catalogos { get; set; }
+        public DbSet<Transaccion> Transacciones { get; set; }
 
         public TariumMainDB_Context(DbContextOptions<TariumMainDB_Context> options) : base(options) { }
 
@@ -25,6 +26,7 @@ namespace Tarium_Web_API.Contexts.TariumMainDB
             modelBuilder.Entity<Proveedor>().ToTable("Proveedores");
             modelBuilder.Entity<Producto>().ToTable("Productos");
             modelBuilder.Entity<Catalogo>().ToTable("Catalogos");
+            modelBuilder.Entity<Transaccion>().ToTable("Transacciones");
 
             // Configure Primary Keys
             modelBuilder.Entity<Sucursal>().HasKey(sucursal => sucursal.Id).HasName("PK_Sucursales");
@@ -33,6 +35,7 @@ namespace Tarium_Web_API.Contexts.TariumMainDB
             modelBuilder.Entity<Proveedor>().HasKey(proveedor => proveedor.Id).HasName("PK_Proveedores");
             modelBuilder.Entity<Producto>().HasKey(producto => producto.Id).HasName("PK_Productos");
             modelBuilder.Entity<Catalogo>().HasKey(catalogo => catalogo.Id).HasName("PK_Catalogos");
+            modelBuilder.Entity<Transaccion>().HasKey(transaccion => transaccion.Id).HasName("PK_Transacciones");
 
             // Configure indexes
             modelBuilder.Entity<Sucursal>().HasIndex(sucursal => sucursal.Nombre).IsUnique().HasDatabaseName("UNQ_Sucursales_Nombre");
@@ -71,17 +74,24 @@ namespace Tarium_Web_API.Contexts.TariumMainDB
             modelBuilder.Entity<Producto>().Property(producto => producto.Comentario).HasColumnType("nvarchar(1000)");
             modelBuilder.Entity<Producto>().Property(producto => producto.Estado).HasColumnType("nvarchar(50)").IsRequired();
 
-
             modelBuilder.Entity<Catalogo>().Property(catalogo => catalogo.Id).HasColumnType("int").UseMySqlIdentityColumn().IsRequired();
             modelBuilder.Entity<Catalogo>().Property(catalogo => catalogo.Id_Sucursal).HasColumnType("int").IsRequired();
             modelBuilder.Entity<Catalogo>().Property(catalogo => catalogo.Id_Producto).HasColumnType("int").IsRequired();
             modelBuilder.Entity<Catalogo>().Property(catalogo => catalogo.Cantidad).HasColumnType("int").IsRequired();
+
+            modelBuilder.Entity<Transaccion>().Property(transaccion => transaccion.Id).HasColumnType("int").UseMySqlIdentityColumn().IsRequired();
+            modelBuilder.Entity<Transaccion>().Property(transaccion => transaccion.Tipo).HasColumnType("nvarchar(50)").IsRequired();
+            modelBuilder.Entity<Transaccion>().Property(transaccion => transaccion.Id_Producto).HasColumnType("int").IsRequired();
+            modelBuilder.Entity<Transaccion>().Property(transaccion => transaccion.Cantidad).HasColumnType("int").IsRequired();
+            modelBuilder.Entity<Transaccion>().Property(transaccion => transaccion.Costo).HasColumnType("decimal").IsRequired();
 
             // Configure relationships  
             modelBuilder.Entity<Token>().HasOne<Usuario>().WithMany().HasPrincipalKey(usuario => usuario.Id).HasForeignKey(token => token.Id_Usuario).OnDelete(DeleteBehavior.NoAction).HasConstraintName("FK_Tokens_Usuarios");
             modelBuilder.Entity<Producto>().HasOne(producto => producto.Proveedor).WithMany().HasPrincipalKey(proveedor => proveedor.Id).HasForeignKey(producto => producto.Id_Proveedor).OnDelete(DeleteBehavior.NoAction).HasConstraintName("FK_Productos_Proveedores");
             modelBuilder.Entity<Catalogo>().HasOne(catalogo => catalogo.Producto).WithMany().HasPrincipalKey(producto => producto.Id).HasForeignKey(catalogo => catalogo.Id_Producto).OnDelete(DeleteBehavior.NoAction).HasConstraintName("FK_Catalogos_Productos");
             modelBuilder.Entity<Sucursal>().HasMany(sucursal => sucursal.Catalogos).WithOne().HasPrincipalKey(sucursal => sucursal.Id).HasForeignKey(catalogo => catalogo.Id_Sucursal).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_Catalogos_Sucursales");
+            modelBuilder.Entity<Transaccion>().HasOne(transaccion => transaccion.Sucursal).WithMany().HasPrincipalKey(sucursal => sucursal.Id).HasForeignKey(transaccion => transaccion.Id_Sucursal).OnDelete(DeleteBehavior.NoAction).HasConstraintName("FK_Transacciones_Sucursal");
+            modelBuilder.Entity<Transaccion>().HasOne(transaccion => transaccion.Producto).WithMany().HasPrincipalKey(producto => producto.Id).HasForeignKey(transaccion => transaccion.Id_Producto).OnDelete(DeleteBehavior.NoAction).HasConstraintName("FK_Transacciones_Productos");
         }
     }
 }

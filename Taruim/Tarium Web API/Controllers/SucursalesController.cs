@@ -23,7 +23,7 @@ namespace Tarium_Web_API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Sucursal>>> GetSucursales()
         {
-            return await _context.Sucursales.ToListAsync();
+            return await _context.Sucursales.Include(sucursal => sucursal.Catalogos).ThenInclude(catalogos => catalogos.Producto).ToListAsync();
         }
 
         // GET: api/Sucursales/5

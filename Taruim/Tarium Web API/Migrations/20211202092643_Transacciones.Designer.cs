@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Tarium_Web_API.Contexts.TariumMainDB;
 
 namespace Tarium_Web_API.Migrations
 {
     [DbContext(typeof(TariumMainDB_Context))]
-    partial class TariumMainDB_ContextModelSnapshot : ModelSnapshot
+    [Migration("20211202092643_Transacciones")]
+    partial class Transacciones
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -178,9 +180,6 @@ namespace Tarium_Web_API.Migrations
                     b.Property<int>("Id_Producto")
                         .HasColumnType("int");
 
-                    b.Property<int>("Id_Sucursal")
-                        .HasColumnType("int");
-
                     b.Property<string>("Tipo")
                         .IsRequired()
                         .HasColumnType("nvarchar(50)");
@@ -189,8 +188,6 @@ namespace Tarium_Web_API.Migrations
                         .HasName("PK_Transacciones");
 
                     b.HasIndex("Id_Producto");
-
-                    b.HasIndex("Id_Sucursal");
 
                     b.ToTable("Transacciones");
                 });
@@ -279,16 +276,7 @@ namespace Tarium_Web_API.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("Tarium_Web_API.Contexts.TariumMainDB.Models.Sucursal", "Sucursal")
-                        .WithMany()
-                        .HasForeignKey("Id_Sucursal")
-                        .HasConstraintName("FK_Transacciones_Sucursal")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
                     b.Navigation("Producto");
-
-                    b.Navigation("Sucursal");
                 });
 
             modelBuilder.Entity("Tarium_Web_API.Contexts.TariumMainDB.Models.Sucursal", b =>
