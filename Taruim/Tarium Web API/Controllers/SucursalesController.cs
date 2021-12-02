@@ -30,7 +30,7 @@ namespace Tarium_Web_API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Sucursal>> GetSucursal(int id)
         {
-            var sucursal = await _context.Sucursales.FindAsync(id);
+            var sucursal = await _context.Sucursales.Include(sucursal => sucursal.Catalogos).ThenInclude(catalogos => catalogos.Producto).SingleOrDefaultAsync(sucursal => sucursal.Id == id);
 
             if (sucursal == null)
             {
@@ -51,9 +51,13 @@ namespace Tarium_Web_API.Controllers
             }
 
             _context.Entry(sucursal).State = EntityState.Modified;
+            _context.Catalogos.RemoveRange(await _context.Catalogos.Where(catalogo => catalogo.Id_Sucursal == sucursal.Id).ToArrayAsync());
 
             try
             {
+                await _context.SaveChangesAsync();
+
+                _context.Catalogos.AddRange(sucursal.Catalogos);
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
@@ -77,6 +81,14 @@ namespace Tarium_Web_API.Controllers
         public async Task<ActionResult<Sucursal>> PostSucursal(Sucursal sucursal)
         {
             _context.Sucursales.Add(sucursal);
+            await _context.SaveChangesAsync();
+
+            foreach (Catalogo catalogo in sucursal.Catalogos)
+            {
+                catalogo.Id_Sucursal = sucursal.Id;
+            }
+
+            _context.Catalogos.AddRange(sucursal.Catalogos);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetSucursal", new { id = sucursal.Id }, sucursal);

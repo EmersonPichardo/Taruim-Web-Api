@@ -10,47 +10,47 @@ namespace Tarium_Web_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProveedoresController : ControllerBase
+    public class ProductosController : ControllerBase
     {
         private readonly TariumMainDB_Context _context;
 
-        public ProveedoresController(TariumMainDB_Context context)
+        public ProductosController(TariumMainDB_Context context)
         {
             _context = context;
         }
 
-        // GET: api/Proveedores
+        // GET: api/Productos
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Proveedor>>> GetProveedores()
+        public async Task<ActionResult<IEnumerable<Producto>>> GetProductos()
         {
-            return await _context.Proveedores.ToListAsync();
+            return await _context.Productos.ToListAsync();
         }
 
-        // GET: api/Proveedores/5
+        // GET: api/Productos/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Proveedor>> GetProveedor(int id)
+        public async Task<ActionResult<Producto>> GetProducto(int id)
         {
-            var proveedor = await _context.Proveedores.FindAsync(id);
+            var producto = await _context.Productos.Include(producto => producto.Proveedor).SingleOrDefaultAsync(producto => producto.Id == id);
 
-            if (proveedor == null)
+            if (producto == null)
             {
                 return NotFound();
             }
 
-            return proveedor;
+            return producto;
         }
 
-        // PUT: api/Proveedores/5
+        // PUT: api/Productos/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutProveedor(int id, Proveedor proveedor)
+        public async Task<IActionResult> PutProducto(int id, Producto producto)
         {
-            if (id != proveedor.Id)
+            if (id != producto.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(proveedor).State = EntityState.Modified;
+            _context.Entry(producto).State = EntityState.Modified;
 
             try
             {
@@ -58,7 +58,7 @@ namespace Tarium_Web_API.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ProveedorExists(id))
+                if (!ProductoExists(id))
                 {
                     return NotFound();
                 }
@@ -71,36 +71,36 @@ namespace Tarium_Web_API.Controllers
             return NoContent();
         }
 
-        // POST: api/Proveedores
+        // POST: api/Productos
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Proveedor>> PostProveedor(Proveedor proveedor)
+        public async Task<ActionResult<Producto>> PostProducto(Producto producto)
         {
-            _context.Proveedores.Add(proveedor);
+            _context.Productos.Add(producto);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetProveedor", new { id = proveedor.Id }, proveedor);
+            return CreatedAtAction("GetProducto", new { id = producto.Id }, producto);
         }
 
-        // DELETE: api/Proveedores/5
+        // DELETE: api/Productos/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteProveedor(int id)
+        public async Task<IActionResult> DeleteProducto(int id)
         {
-            var proveedor = await _context.Proveedores.FindAsync(id);
-            if (proveedor == null)
+            var producto = await _context.Productos.FindAsync(id);
+            if (producto == null)
             {
                 return NotFound();
             }
 
-            _context.Proveedores.Remove(proveedor);
+            _context.Productos.Remove(producto);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool ProveedorExists(int id)
+        private bool ProductoExists(int id)
         {
-            return _context.Proveedores.Any(e => e.Id == id);
+            return _context.Productos.Any(e => e.Id == id);
         }
     }
 }

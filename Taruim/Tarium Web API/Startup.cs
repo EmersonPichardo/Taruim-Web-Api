@@ -26,6 +26,8 @@ namespace Tarium_Web_API
             services.AddCors();
 
             services.AddControllers();
+
+            services.AddControllers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

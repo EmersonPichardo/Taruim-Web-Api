@@ -3,46 +3,22 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Tarium_Web_API.Contexts.TariumMainDB;
 
 namespace Tarium_Web_API.Migrations
 {
     [DbContext(typeof(TariumMainDB_Context))]
-    partial class TariumMainDB_ContextModelSnapshot : ModelSnapshot
+    [Migration("20211202050343_Productos")]
+    partial class Productos
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 64)
                 .HasAnnotation("ProductVersion", "5.0.12");
-
-            modelBuilder.Entity("Tarium_Web_API.Contexts.TariumMainDB.Models.Catalogo", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("Cantidad")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Id_Producto")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Id_Sucursal")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id")
-                        .HasName("PK_Catalogos");
-
-                    b.HasIndex("Id_Producto");
-
-                    b.HasIndex("Id_Sucursal");
-
-                    b.ToTable("Catalogos");
-                });
 
             modelBuilder.Entity("Tarium_Web_API.Contexts.TariumMainDB.Models.Producto", b =>
                 {
@@ -64,7 +40,7 @@ namespace Tarium_Web_API.Migrations
                     b.Property<DateTime?>("FechaVencimiento")
                         .HasColumnType("datetime");
 
-                    b.Property<int?>("Id_Proveedor")
+                    b.Property<int>("Id_Proveedor")
                         .HasColumnType("int");
 
                     b.Property<string>("Nombre")
@@ -197,32 +173,14 @@ namespace Tarium_Web_API.Migrations
                     b.ToTable("Usuarios");
                 });
 
-            modelBuilder.Entity("Tarium_Web_API.Contexts.TariumMainDB.Models.Catalogo", b =>
-                {
-                    b.HasOne("Tarium_Web_API.Contexts.TariumMainDB.Models.Producto", null)
-                        .WithMany()
-                        .HasForeignKey("Id_Producto")
-                        .HasConstraintName("FK_Catalogos_Productos")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("Tarium_Web_API.Contexts.TariumMainDB.Models.Sucursal", null)
-                        .WithMany("Catalogos")
-                        .HasForeignKey("Id_Sucursal")
-                        .HasConstraintName("FK_Catalogos_Sucursales")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Tarium_Web_API.Contexts.TariumMainDB.Models.Producto", b =>
                 {
-                    b.HasOne("Tarium_Web_API.Contexts.TariumMainDB.Models.Proveedor", "Proveedor")
+                    b.HasOne("Tarium_Web_API.Contexts.TariumMainDB.Models.Proveedor", null)
                         .WithMany()
                         .HasForeignKey("Id_Proveedor")
                         .HasConstraintName("FK_Productos_Proveedores")
-                        .OnDelete(DeleteBehavior.NoAction);
-
-                    b.Navigation("Proveedor");
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Tarium_Web_API.Contexts.TariumMainDB.Models.Token", b =>
@@ -233,11 +191,6 @@ namespace Tarium_Web_API.Migrations
                         .HasConstraintName("FK_Tokens_Usuarios")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Tarium_Web_API.Contexts.TariumMainDB.Models.Sucursal", b =>
-                {
-                    b.Navigation("Catalogos");
                 });
 #pragma warning restore 612, 618
         }
