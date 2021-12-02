@@ -2,15 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Tarium_Web_API.Contexts.TariumMainDB;
 
 namespace Tarium_Web_API.Migrations
 {
     [DbContext(typeof(TariumMainDB_Context))]
-    partial class TariumMainDB_ContextModelSnapshot : ModelSnapshot
+    [Migration("20211202042335_Proveedores")]
+    partial class Proveedores
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,10 +31,6 @@ namespace Tarium_Web_API.Migrations
 
                     b.Property<string>("Contacto")
                         .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("Estado")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Nombre")
                         .IsRequired()

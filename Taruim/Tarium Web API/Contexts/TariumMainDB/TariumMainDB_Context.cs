@@ -8,6 +8,7 @@ namespace Tarium_Web_API.Contexts.TariumMainDB
         public DbSet<Sucursal> Sucursales { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Token> Tokens { get; set; }
+        public DbSet<Proveedor> Proveedores { get; set; }
 
         public TariumMainDB_Context(DbContextOptions<TariumMainDB_Context> options) : base(options) { }
 
@@ -19,11 +20,13 @@ namespace Tarium_Web_API.Contexts.TariumMainDB
             modelBuilder.Entity<Sucursal>().ToTable("Sucursales");
             modelBuilder.Entity<Usuario>().ToTable("Usuarios");
             modelBuilder.Entity<Token>().ToTable("Tokens");
+            modelBuilder.Entity<Proveedor>().ToTable("Proveedores");
 
             // Configure Primary Keys
             modelBuilder.Entity<Sucursal>().HasKey(sucursal => sucursal.Id).HasName("PK_Sucursales");
             modelBuilder.Entity<Usuario>().HasKey(usuario => usuario.Id).HasName("PK_Usuarios");
             modelBuilder.Entity<Token>().HasKey(token => token.Hash).HasName("PK_Tokens");
+            modelBuilder.Entity<Proveedor>().HasKey(proveedor => proveedor.Id).HasName("PK_Proveedores");
 
             // Configure indexes
             modelBuilder.Entity<Sucursal>().HasIndex(sucursal => sucursal.Nombre).IsUnique().HasDatabaseName("UNQ_Sucursales_Nombre");
@@ -44,6 +47,12 @@ namespace Tarium_Web_API.Contexts.TariumMainDB
 
             modelBuilder.Entity<Token>().Property(token => token.Hash).HasColumnType("nvarchar(500)").IsRequired();
             modelBuilder.Entity<Token>().Property(token => token.Id_Usuario).HasColumnType("int").IsRequired();
+
+            modelBuilder.Entity<Proveedor>().Property(proveedor => proveedor.Id).HasColumnType("int").UseMySqlIdentityColumn().IsRequired();
+            modelBuilder.Entity<Proveedor>().Property(proveedor => proveedor.Nombre).HasColumnType("nvarchar(100)").IsRequired();
+            modelBuilder.Entity<Proveedor>().Property(proveedor => proveedor.Contacto).HasColumnType("nvarchar(200)");
+            modelBuilder.Entity<Proveedor>().Property(proveedor => proveedor.Estado).HasColumnType("nvarchar(50)").IsRequired();
+            modelBuilder.Entity<Proveedor>().Property(proveedor => proveedor.Comentario).HasColumnType("nvarchar(1000)");
 
             // Configure relationships  
             modelBuilder.Entity<Token>().HasOne<Usuario>().WithMany().HasPrincipalKey(usuario => usuario.Id).HasForeignKey(token => token.Id_Usuario).OnDelete(DeleteBehavior.NoAction).HasConstraintName("FK_Tokens_Usuarios");
